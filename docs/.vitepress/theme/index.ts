@@ -11,6 +11,8 @@ import mediumZoom from 'medium-zoom'
 import { useMediaQuery } from '@vueuse/core'
 import { useRoute } from 'vitepress'
 import { enhanceAppWithTabs } from 'vitepress-plugin-tabs/client'
+import AsideSponsors from './components/AsideSponsors.vue'
+import BannerSponsor from './components/BannerSponsor.vue'
 
 const isMobileorTablet = useMediaQuery('(max-width: 1279px)')
 
@@ -20,12 +22,14 @@ export default {
   Layout() {
 
     return h(DefaultTheme.Layout, null, {
-      // 'aside-ads-before': () => h(Placeholder),
-      'aside-ads-before': () => h(Authors),
+      'aside-ads-before': () => h(AsideSponsors),
+      'aside-ads-after': () => h(Authors),
       // 'doc-before': () => h(Placeholder),
       // 'doc-footer-before': () => isMobile.value ? h(Authors) : h(Placeholder),
       // 'doc-footer-before': () => isMobile.value ? h(Authors) : h(Placeholder),
+      'doc-before': () => h(BannerSponsor),
       'doc-footer-before': () => isMobileorTablet.value ? h(Authors) : null,
+      'doc-after': () => isMobileorTablet.value ? h(AsideSponsors, { style: { marginTop: '24px' } }) : null,
       // 'aside-outline-after': () => isMobile.value ? null : h(Authors),
       // 'nav-screen-content-after': () => h(Placeholder),
       'sidebar-nav-before': () => h(News),
