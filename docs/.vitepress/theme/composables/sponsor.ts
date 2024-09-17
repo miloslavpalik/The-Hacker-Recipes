@@ -7,16 +7,32 @@ interface Sponsors {
   gold: Sponsor[]
   silver: Sponsor[]
   bronze: Sponsor[]
+  banner: BannerSponsor[] // Ajout de la catégorie banner
 }
 
 interface Sponsor {
   name: string
   img: string
   url: string
-  /**
-   * Expects to also have an **inversed** image with `-dark` postfix.
-   */
   hasDark?: true
+}
+
+interface BannerSponsor {
+  name: string
+  url: string
+  tagline: string
+  description: string
+  categories: string[] // Ajout des catégories
+  lightTheme: {
+    primaryColor: string
+    secondaryColor: string
+    logo: string
+  }
+  darkTheme: {
+    primaryColor: string
+    secondaryColor: string
+    logo: string
+  }
 }
 
 // shared data across instances so we load only once.
@@ -24,9 +40,8 @@ const data = ref()
 
 // Set dataHost to an empty string since images are local
 const dataHost = ''
-// Removed dataUrl since we are not fetching from a remote source
 
-const viteSponsors: Pick<Sponsors, 'special' | 'gold'> = {
+const viteSponsors: Pick<Sponsors, 'special' | 'gold' | 'banner'> = {
   special: [
     {
       name: 'Google',
@@ -71,6 +86,25 @@ const viteSponsors: Pick<Sponsors, 'special' | 'gold'> = {
       img: 'https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg',
     },
   ],
+  banner: [
+    {
+      name: 'Evil Corp',
+      url: 'https://www.evil-corp.com',
+      tagline: 'Corrupt conglomerate.',
+      description: "Systemic manipulation as a service. Empowering the next generation of cybercriminals. Your local surveillance state that you can't opt out of.",
+      categories: ['ad'], // Spécifiez les catégories ici
+      lightTheme: {
+        primaryColor: '#7b42f6',
+        secondaryColor: '#42aaff',
+        logo: '/images/sponsors/logo_light.png'
+      },
+      darkTheme: {
+        primaryColor: '#9e6eff',
+        secondaryColor: '#66bbff',
+        logo: '/images/sponsors/logo_dark.png'
+      }
+    }
+  ]
 }
 
 function toggleDarkLogos() {
@@ -116,7 +150,7 @@ export function useSponsor() {
   }
 }
 
-function mapSponsors(sponsors: Pick<Sponsors, 'special' | 'gold'>) {
+function mapSponsors(sponsors: Pick<Sponsors, 'special' | 'gold' | 'banner'>) {
   return [
     {
       tier: 'Special Sponsors',
@@ -127,6 +161,11 @@ function mapSponsors(sponsors: Pick<Sponsors, 'special' | 'gold'>) {
       tier: 'Gold Sponsors',
       size: 'small',
       items: sponsors['gold'],
+    },
+    {
+      tier: 'Banner Sponsors',
+      size: 'medium',
+      items: sponsors['banner'],
     },
   ]
 }

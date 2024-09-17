@@ -1,5 +1,6 @@
 ---
-authors: PfiatDe, ShutdownRepo, sckdev
+authors: 'PfiatDe, ShutdownRepo, sckdev'
+category: ad
 ---
 
 # Pass the Certificate

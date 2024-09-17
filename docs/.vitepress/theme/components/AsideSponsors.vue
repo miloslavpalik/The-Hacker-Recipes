@@ -7,12 +7,14 @@ const { data } = useSponsor()
 
 const sponsors = computed(() => {
   return (
-    data?.value.map((sponsor) => {
-      return {
-        size: sponsor.size === 'big' ? 'mini' : 'xmini',
-        items: sponsor.items,
-      }
-    }) ?? []
+    data?.value
+     .filter((sponsor) => sponsor.tier !== 'Banner Sponsors') // Exclure les sponsors bannière
+      .map((sponsor) => {
+        return {
+          size: sponsor.size === 'big' ? 'mini' : 'xmini',
+          items: sponsor.items,
+        }
+      }) ?? []
   )
 })
 </script>

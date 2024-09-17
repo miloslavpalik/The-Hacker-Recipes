@@ -1,12 +1,12 @@
 <template>
-    <a class="banner-sponsor" :href="sponsor.url" target="_blank" rel="noopener noreferrer">
-      <img :src="logoSrc" :alt="sponsor.name" class="banner-logo" />
+    <a v-if="currentSponsor" class="banner-sponsor" :href="currentSponsor.url" target="_blank" rel="noopener noreferrer">
+      <img :src="logoSrc" :alt="currentSponsor.name" class="banner-logo" />
       <span class="banner-text">
         <div class="main-info">
-          <p class="sponsor-name">{{ sponsor.name }}</p>
-          <p class="sponsor-tagline">{{ sponsor.tagline }}</p>
+          <p class="sponsor-name">{{ currentSponsor.name }}</p>
+          <p class="sponsor-tagline">{{ currentSponsor.tagline }}</p>
         </div>
-        <p class="sponsor-description">{{ sponsor.description }}</p>
+        <p class="sponsor-description">{{ currentSponsor.description }}</p>
       </span>
       <span class="official-sponsor">official sponsor</span>
     </a>
@@ -15,34 +15,35 @@
   <script setup lang="ts">
   import { computed } from 'vue'
   import { useData } from 'vitepress'
+  import { useSponsor } from '../composables/sponsor'
   
-  const { isDark } = useData()
+  const { isDark, page } = useData()
+  const { data } = useSponsor()
   
-  const sponsor = {
-    name: 'Evil Corp',
-    url: 'https://www.evil-corp.com',
-    tagline: 'Corrupt conglomerate.',
-    description: "Systemic manipulation as a service. Empowering the next generation of cybercriminals. Your local surveillance state that you can't opt out of.",
-    lightTheme: {
-      primaryColor: '#7b42f6',
-      secondaryColor: '#42aaff',
-      logo: '/images/sponsors/logo_light.png'
-    },
-    darkTheme: {
-      primaryColor: '#9e6eff',
-      secondaryColor: '#66bbff',
-      logo: '/images/sponsors/logo_dark.png'
-    }
-  }
+  // Récupérer la catégorie actuelle depuis le frontmatter
+  const currentCategory = computed(() => page.value.frontmatter.category || '')
   
-  const theme = computed(() => isDark.value ? sponsor.darkTheme : sponsor.lightTheme)
+  // Filtrer les sponsors pour n'inclure que ceux de la catégorie actuelle
+  const currentSponsor = computed(() => {
+    return data.value?.find(sponsor => 
+      sponsor.tier === 'Banner Sponsors'
+    )?.items.find(banner => 
+      banner.categories.includes(currentCategory.value)
+    )
+  })
   
-  const logoSrc = computed(() => theme.value.logo)
+  // Applique des valeurs par défaut pour éviter les erreurs si currentSponsor est undefined
+  const theme = computed(() => {
+    if (!currentSponsor.value) return { primaryColor: '#000', secondaryColor: '#000', logo: '' }
+    return isDark.value ? currentSponsor.value.darkTheme : currentSponsor.value.lightTheme
+  })
   
-  // Compute gradient strings
-  const gradientBorder = computed(() => `linear-gradient(120deg, ${theme.value.secondaryColor}99, ${theme.value.primaryColor}99)`)
-  const gradientHover = computed(() => `linear-gradient(120deg, ${theme.value.secondaryColor}, ${theme.value.primaryColor})`)
-  const gradientText = computed(() => `linear-gradient(120deg, ${theme.value.primaryColor}, ${theme.value.secondaryColor})`)
+  const logoSrc = computed(() => theme.value.logo || '')
+  
+  // Compute gradient strings avec des valeurs par défaut pour éviter les erreurs
+  const gradientBorder = computed(() => `linear-gradient(120deg, ${theme.value.secondaryColor || '#000'}99, ${theme.value.primaryColor || '#000'}99)`)
+  const gradientHover = computed(() => `linear-gradient(120deg, ${theme.value.secondaryColor || '#000'}, ${theme.value.primaryColor || '#000'})`)
+  const gradientText = computed(() => `linear-gradient(120deg, ${theme.value.primaryColor || '#000'}, ${theme.value.secondaryColor || '#000'})`)
   </script>
   
   <style scoped>

@@ -1,5 +1,6 @@
 ---
-authors: ShutdownRepo, joker2a
+authors: 'ShutdownRepo, joker2a'
+category: radio
 ---
 
 # WPS
