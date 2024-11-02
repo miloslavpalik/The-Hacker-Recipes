@@ -21,5 +21,3 @@ The following command will enable the analyze modes and will give interesting in
 responder --interface "eth0" --analyze
 responder -I "eth0" -A
 ```
-
-[https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/responder-20-owning-windows-networks-part-3/](https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/responder-20-owning-windows-networks-part-3/)
